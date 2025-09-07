@@ -7,5 +7,6 @@ class Vigenere_Cipher
 
       Vigenere_Cipher();
       string Encryption(string Ans,string key);
+  
       string Decryption(string Ans,string key);
 };

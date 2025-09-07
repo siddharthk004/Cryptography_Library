@@ -100,6 +100,7 @@ string HillCipher::Decryption(string Ans)
 
         for (int row = 0; row < 3; row++)
         {
+            
             ans += tolower(char((c3[row][0] % 26) + 'A'));
         }
     }
