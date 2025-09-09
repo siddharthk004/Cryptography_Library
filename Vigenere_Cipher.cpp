@@ -28,7 +28,7 @@ string Vigenere_Cipher::Encryption(string Ans,string key)
             len -= 97;
             flag = 1;
         }
-        else
+        else 
         {
             len -= 65;
             flag = 2;

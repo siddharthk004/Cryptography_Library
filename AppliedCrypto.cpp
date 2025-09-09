@@ -12,6 +12,14 @@ int main()
     string ans3 = "";
     cout<<"\n"<<ans;
 
+    // Shift Cipher
+    cout<<"\n"<<ans;
+    Shift_Cipher sc;
+    ans3 = sc.Encryption(ans,5);
+    cout<<"\n"<<ans3;
+    ans = sc.Decryption(ans3,5);
+    cout<<"\n"<<ans;
+
     // Vigenere Cipher
     Vigenere_Cipher v;
     ans3 = v.Encryption(ans,ans2);
@@ -26,15 +34,6 @@ int main()
     cout<<"\n"<<ans3;
     ans = hc.Decryption(ans3);
     cout<<"\n"<<ans;
-
-    // Shift Cipher
-    cout<<"\n"<<ans;
-    Shift_Cipher sc;
-    ans3 = sc.Encryption(ans,5);
-    cout<<"\n"<<ans3;
-    ans = sc.Decryption(ans3,5);
-    cout<<"\n"<<ans;
-
     
     return 0;
 }
