@@ -13,27 +13,35 @@ int main()
     cout<<"\n"<<ans;
 
     // Shift Cipher
-    cout<<"\n"<<ans;
+    cout<<"\n\n --- Shift Cipher --- ";
     Shift_Cipher sc;
-    ans3 = sc.Encryption(ans,5);
-    cout<<"\n"<<ans3;
-    ans = sc.Decryption(ans3,5);
-    cout<<"\n"<<ans;
+    char AD = char(69);
+    string a = "";
+    a += AD;
+    cout<<"\nORG - "<<ans;
+    ans3 = sc.Encryption(ans,a);
+    cout<<"\nENC - "<<ans3;
+    ans = sc.Decryption(ans3,a);
+    cout<<"\nDEC - "<<ans;
 
     // Vigenere Cipher
+    cout<<"\n\n --- Vigenere Cipher --- ";
     Vigenere_Cipher v;
+    cout<<"\nORG - "<<ans;
     ans3 = v.Encryption(ans,ans2);
-    cout<<"\n"<<ans3;
+    cout<<"\nENC - "<<ans3;
     ans3 = v.Decryption(ans3,ans2);
-    cout<<"\n"<<ans3;
+    cout<<"\nDEC - "<<ans3;
 
     //Hill Cipher
+    cout<<"\n\n --- Hill Cipher ---";
     HillCipher hc;
+    cout<<"\nORG - "<<ans;
     hc.KeyForm();
     ans3 = hc.Encryption(ans);
-    cout<<"\n"<<ans3;
+    cout<<"\nENC - "<<ans3;
     ans = hc.Decryption(ans3);
-    cout<<"\n"<<ans;
+    cout<<"\nDEC - "<<ans;
     
     return 0;
 }

@@ -4,9 +4,10 @@
 Shift_Cipher::Shift_Cipher()
 {}
 
-string Shift_Cipher::Encryption(string Ans,int key)
+string Shift_Cipher::Encryption(string Ans,string key)
 {   
     string newString = "";
+    int lengthKey = key.length();
     int lengthAns = Ans.length();
     int flag = 0,i = 0;
 
@@ -20,24 +21,19 @@ string Shift_Cipher::Encryption(string Ans,int key)
             len -= 97;
             flag = 1;
         }
-        else
+        else 
         {
             len -= 65;
             flag = 2;
         }
-
-        if(len > 96)
-            len = (len + (key)) % 26;
+        int num = int(key[i%lengthKey]);
+        if(num > 96)
+            len = (len + (num-97)) % 26;
         else
-            len = (len + (key)) % 26;
+            len = (len + (num-65)) % 26;
         i++;
-
-
-        if(flag == 2)
-            len += 65;
-        else
-            len += 97;
-
+        
+        len += flag==2 ? 65 : 97;
         
         ch = char(len);
         newString += ch;
@@ -46,9 +42,10 @@ string Shift_Cipher::Encryption(string Ans,int key)
     return newString;
 }
 
-string Shift_Cipher::Decryption(string Ans,int key)
+string Shift_Cipher::Decryption(string Ans,string key)
 {
     string newString = "";
+    int lengthKey = key.length();
     int lengthAns = Ans.length();
     int flag = 0,i = 0;
 
@@ -67,22 +64,18 @@ string Shift_Cipher::Decryption(string Ans,int key)
             len -= 65;
             flag = 2;
         }
-        if(key > 96)
-            len = (len - (key) + 26) % 26;
+        int num = int(key[i%lengthKey]);
+        if(num > 96)
+            len = (len - (num-97) + 26) % 26;
         else
-            len = (len - (key) + 26) % 26;
+            len = (len - (num-65) + 26) % 26;
         i++;
 
-
-        if(flag == 2)
-            len += 65;
-        else
-            len += 97;
-
-        
+        len += flag==2 ? 65 : 97;
         ch = char(len);
         newString += ch;
 
     } 
     return newString;
+
 }

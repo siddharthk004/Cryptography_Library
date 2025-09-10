@@ -1,12 +1,10 @@
 #include<iostream>
 using namespace std;
+#include "../Crypto/Shift_Cipher.hpp"
 
-class Vigenere_Cipher
+class Vigenere_Cipher : public Shift_Cipher
 {
     public:
 
       Vigenere_Cipher();
-      string Encryption(string Ans,string key);
-  
-      string Decryption(string Ans,string key);
 };
