@@ -5,6 +5,5 @@ using namespace std;
 class Vigenere_Cipher : public Shift_Cipher
 {
     public:
-
       Vigenere_Cipher();
 };

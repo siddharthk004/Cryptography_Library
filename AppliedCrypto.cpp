@@ -36,12 +36,15 @@ int main()
     //Hill Cipher
     cout<<"\n\n --- Hill Cipher ---";
     HillCipher hc;
-    cout<<"\nORG - "<<ans;
-    hc.KeyForm();
-    ans3 = hc.Encryption(ans);
-    cout<<"\nENC - "<<ans3;
-    ans = hc.Decryption(ans3);
-    cout<<"\nDEC - "<<ans;
+    hc.GenerateRandomKey();
+
+    string plaintext = "HELLOHILLCIPHER";
+    string cipher = hc.Encryption(plaintext);
+    string decrypted = hc.Decryption(cipher);
+
+    cout << "Plaintext : " << plaintext << endl;
+    cout << "Ciphertext: " << cipher << endl;
+    cout << "Decrypted : " << decrypted << endl;
     
     return 0;
 }
