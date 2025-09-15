@@ -37,14 +37,13 @@ int main()
     cout<<"\n\n --- Hill Cipher ---";
     HillCipher hc;
     hc.GenerateRandomKey();
+    cout<<"\nORG - "<<ans;
+    ans3 = hc.Encryption(ans);
+    cout<<"\nENC - "<<ans3;
+    ans3 = hc.Decryption(ans3);
+    cout<<"\nDEC - "<<ans3;
 
-    string plaintext = "HELLOHILLCIPHER";
-    string cipher = hc.Encryption(plaintext);
-    string decrypted = hc.Decryption(cipher);
-
-    cout << "Plaintext : " << plaintext << endl;
-    cout << "Ciphertext: " << cipher << endl;
-    cout << "Decrypted : " << decrypted << endl;
-    
     return 0;
 }
+
+// g++ AppliedCrypto.cpp Hill_Cipher.cpp Shift_Cipher.cpp Vigenere_Cipher.cpp -o Myexe -lntl -lgmp -lm -mconsole

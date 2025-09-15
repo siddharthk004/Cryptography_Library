@@ -1,4 +1,11 @@
 #include "Hill_Cipher.hpp"
+#include <NTL/mat_ZZ.h>
+#include <NTL/ZZ.h>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+using namespace NTL;
 
 HillCipher::HillCipher()
 {
@@ -7,54 +14,69 @@ HillCipher::HillCipher()
     c1.resize(3, vector<int>(1));
     c2.resize(3, vector<int>(1));
     c3.resize(3, vector<int>(1));
+    srand((unsigned)time(nullptr));
+}
+
+// helper: compute adjoint of 3x3 int matrix
+void HillCipher::adjoint3x3(int adj[3][3], int m[3][3])
+{
+    adj[0][0] = (m[1][1]*m[2][2] - m[1][2]*m[2][1]);
+    adj[0][1] = -(m[0][1]*m[2][2] - m[0][2]*m[2][1]);
+    adj[0][2] = (m[0][1]*m[1][2] - m[0][2]*m[1][1]);
+
+    adj[1][0] = -(m[1][0]*m[2][2] - m[1][2]*m[2][0]);
+    adj[1][1] = (m[0][0]*m[2][2] - m[0][2]*m[2][0]);
+    adj[1][2] = -(m[0][0]*m[1][2] - m[0][2]*m[1][0]);
+
+    adj[2][0] = (m[1][0]*m[2][1] - m[1][1]*m[2][0]);
+    adj[2][1] = -(m[0][0]*m[2][1] - m[0][1]*m[2][0]);
+    adj[2][2] = (m[0][0]*m[1][1] - m[0][1]*m[1][0]);
 }
 
 void HillCipher::GenerateRandomKey()
 {
-    // repeatedly generate random matrices until invertible mod 26
     while (true)
     {
-        // generate random 3x3 matrix in [0,25]
+        // random 3x3 key mod 26
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 vc[i][j] = rand() % 26;
 
-        // convert to NTL mat_ZZ for determinant and inverse
+        // determinant using NTL mat_ZZ
         mat_ZZ M;
         M.SetDims(3, 3);
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 M[i][j] = vc[i][j];
 
-        ZZ det = determinant(M);
+        ZZ detZZ = determinant(M);
+        long d = conv<long>(detZZ % 26);
+        if (d < 0) d += 26;
 
-        long d = conv<long>(det % 26); // determinant mod 26
-        if (d < 0)
-            d += 26;
-
-        // check gcd(det,26)==1 (invertible mod 26)
+        // gcd check
         if (GCD(ZZ(d), ZZ(26)) == 1)
         {
-            // compute inverse matrix modulo 26
-            mat_ZZ Adj;
-            adjoint(Adj, M); // classical adjoint
+            // adjoint matrix (int)
+            int m[3][3], adj[3][3];
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    m[i][j] = vc[i][j];
+            adjoint3x3(adj, m);
 
-            // find modular inverse of det
-            long det_inv;
-            InvMod(det_inv, d, 26); // NTL modular inverse
+            // modular inverse of det mod 26
+            long det_inv = InvMod(d, 26);
 
-            // build inverse matrix vc2 = det_inv * Adj mod 26
+            // inverse matrix vc2
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                 {
-                    long val = conv<long>(Adj[i][j] % 26);
-                    if (val < 0)
-                        val += 26;
+                    long val = adj[i][j] % 26;
+                    if (val < 0) val += 26;
                     val = (val * det_inv) % 26;
-                    vc2[i][j] = val;
+                    vc2[i][j] = (int)val;
                 }
 
-            break; // we have good keys
+            break;
         }
     }
 }
@@ -67,9 +89,8 @@ string HillCipher::Encryption(string Ans)
     while (Ans.length() % 3 != 0)
         Ans += 'X';
 
-    string ans = "";
-
-    for (int i = 0; i < (int)Ans.length(); i += 3)
+    string ans;
+    for (size_t i = 0; i < Ans.length(); i += 3)
     {
         for (int row = 0; row < 3; row++)
             c1[row][0] = Ans[i + row] - 'A';
@@ -79,7 +100,6 @@ string HillCipher::Encryption(string Ans)
         for (int row = 0; row < 3; row++)
             ans += char((c2[row][0] % 26) + 'A');
     }
-
     return ans;
 }
 
@@ -110,9 +130,8 @@ string HillCipher::Decryption(string Ans)
     while (Ans.length() % 3 != 0)
         Ans += 'X';
 
-    string ans = "";
-
-    for (int i = 0; i < (int)Ans.length(); i += 3)
+    string ans;
+    for (size_t i = 0; i < Ans.length(); i += 3)
     {
         for (int row = 0; row < 3; row++)
             c2[row][0] = Ans[i + row] - 'A';

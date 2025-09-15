@@ -22,6 +22,7 @@ public:
     void GenerateRandomKey();        // random 3x3 key
     string Encryption(string Ans);   // encrypt
     string Decryption(string Ans);   // decrypt
+    void adjoint3x3(int adj[3][3], int m[3][3]);
 
 private:
     void MatMulE();
