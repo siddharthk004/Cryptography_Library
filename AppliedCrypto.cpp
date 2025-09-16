@@ -3,6 +3,7 @@ using namespace std;
 #include "Vigenere_Cipher.hpp"
 #include "Hill_Cipher.hpp"
 #include "Shift_Cipher.hpp"
+#include "OneTimePad.hpp"
 
 int main()
 {
@@ -43,7 +44,18 @@ int main()
     ans3 = hc.Decryption(ans3);
     cout<<"\nDEC - "<<ans3;
 
+    //One Time Pad
+    cout<<"\n\n --- One Time Pad ---";
+    OneTimePad otp;
+    string key = otp.generateKey(ans.size());
+    cout<<"\nORG - "<<ans;
+    ans3 = otp.encrypt(ans);
+    cout<<"\nENC - "<<ans3;
+    ans3 = otp.decrypt(ans3);
+    cout<<"\nDEC - "<<ans3;
+
     return 0;
 }
 
-// g++ AppliedCrypto.cpp Hill_Cipher.cpp Shift_Cipher.cpp Vigenere_Cipher.cpp -o Myexe -lntl -lgmp -lm -mconsole
+// g++ AppliedCrypto.cpp Hill_Cipher.cpp Shift_Cipher.cpp Vigenere_Cipher.cpp OneTimePad.cpp -o Myexe -lntl -lgmp -lm -mconsole
+// ./Myexe

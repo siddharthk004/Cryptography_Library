@@ -17,7 +17,6 @@ HillCipher::HillCipher()
     srand((unsigned)time(nullptr));
 }
 
-// helper: compute adjoint of 3x3 int matrix
 void HillCipher::adjoint3x3(int adj[3][3], int m[3][3])
 {
     adj[0][0] = (m[1][1]*m[2][2] - m[1][2]*m[2][1]);
@@ -37,12 +36,10 @@ void HillCipher::GenerateRandomKey()
 {
     while (true)
     {
-        // random 3x3 key mod 26
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
                 vc[i][j] = rand() % 26;
 
-        // determinant using NTL mat_ZZ
         mat_ZZ M;
         M.SetDims(3, 3);
         for (int i = 0; i < 3; i++)
@@ -53,20 +50,16 @@ void HillCipher::GenerateRandomKey()
         long d = conv<long>(detZZ % 26);
         if (d < 0) d += 26;
 
-        // gcd check
         if (GCD(ZZ(d), ZZ(26)) == 1)
         {
-            // adjoint matrix (int)
             int m[3][3], adj[3][3];
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                     m[i][j] = vc[i][j];
             adjoint3x3(adj, m);
 
-            // modular inverse of det mod 26
             long det_inv = InvMod(d, 26);
 
-            // inverse matrix vc2
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                 {
