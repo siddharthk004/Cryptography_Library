@@ -14,7 +14,6 @@ HillCipher::HillCipher()
     c1.resize(3, vector<int>(1));
     c2.resize(3, vector<int>(1));
     c3.resize(3, vector<int>(1));
-    srand((unsigned)time(nullptr));
 }
 
 void HillCipher::adjoint3x3(int adj[3][3], int m[3][3])
@@ -69,7 +68,7 @@ void HillCipher::GenerateRandomKey()
                     vc2[i][j] = (int)val;
                 }
 
-            break;
+            break; 
         }
     }
 }

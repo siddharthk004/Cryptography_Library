@@ -1,6 +1,5 @@
 #ifndef HILL_CIPHER_HPP
 #define HILL_CIPHER_HPP
-
 #include <bits/stdc++.h>
 #include <NTL/mat_ZZ.h>
 #include <NTL/ZZ.h>
