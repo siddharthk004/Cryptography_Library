@@ -8,7 +8,7 @@ string Shift_Cipher::Encryption(string Ans,string key)
 {   
     string newString = "";
     int lengthKey = key.length();
-    int lengthAns = Ans.length();
+    // int lengthAns = Ans.length();
     int flag = 0,i = 0;
 
     i = 0;
@@ -46,7 +46,7 @@ string Shift_Cipher::Decryption(string Ans,string key)
 {
     string newString = "";
     int lengthKey = key.length();
-    int lengthAns = Ans.length();
+    // int lengthAns = Ans.length();
     int flag = 0,i = 0;
 
     i = 0;

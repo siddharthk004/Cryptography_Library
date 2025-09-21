@@ -31,7 +31,7 @@ int main()
     cout<<"\nORG - "<<ans;
     ans3 = v.Encryption(ans,ans2);
     cout<<"\nENC - "<<ans3;
-    ans3 = v.Decryption(ans3,ans2);
+    ans3 = v.Decryption(ans3,ans2);    
     cout<<"\nDEC - "<<ans3;
 
     //Hill Cipher

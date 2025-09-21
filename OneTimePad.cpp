@@ -9,7 +9,7 @@ string OneTimePad::generateKey(size_t length) {
     for (size_t i = 0; i < length; i++) {
         char c = static_cast<char>(dist(gen));
         key.push_back(c);
-    }
+    } 
     return key;
 }
 
@@ -21,7 +21,7 @@ string OneTimePad::encrypt(const string &plaintext) {
     if (key.size() < plaintext.size()) {
         throw runtime_error("Key too short for plaintext");
     }
-   string ciphertext;
+    string ciphertext;
     ciphertext.resize(plaintext.size());
 
     for (size_t i = 0; i < plaintext.size(); i++) {
