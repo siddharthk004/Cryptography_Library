@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -Wall -O2
 LIBS = -lntl -lgmp -lm -mconsole
 
-OBJS = AppliedCrypto.o Hill_Cipher.o Shift_Cipher.o Vigenere_Cipher.o OneTimePad.o
+OBJS = AppliedCrypto.o Shift_Cipher.o Vigenere_Cipher.o Hill_Cipher.o OneTimePad.o Diffe_Hellman.o El_Gamal.o 
 
 all: Myexe
 

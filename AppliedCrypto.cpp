@@ -4,6 +4,8 @@ using namespace std;
 #include "Hill_Cipher.hpp"
 #include "Shift_Cipher.hpp"
 #include "OneTimePad.hpp"
+#include "Diffe_Hellman.hpp"
+#include "El_Gamal.hpp"
 
 int main()
 {
@@ -53,6 +55,28 @@ int main()
     cout<<"\nENC - "<<ans3;
     ans3 = otp.decrypt(ans3);
     cout<<"\nDEC - "<<ans3;
+
+    // Diffie Hellman
+    DiffieHellman dh(15); // p = 15
+    cout<<"\n\n --- Diffie Hellman ---";
+    dh.generateValues();
+    dh.computePublicKeys();
+    dh.computeSharedKeys();
+    dh.display();
+
+    // El Gamal
+    cout<<"\n\n --- El Gamal ---\n";
+    ElGamal eg(29); 
+    eg.generateKeys();
+    eg.displayKeys();
+    int m;
+    std::cout << "Enter a message number (1..28): ";
+    std::cin >> m;
+    int c1, c2;
+    eg.encrypt(m, c1, c2);
+    std::cout << "Ciphertext: c1 = " << c1 << ", c2 = " << c2 << "\n";
+    int decrypted = eg.decrypt(c1, c2);
+    std::cout << "Decrypted message = " << decrypted << "\n";
 
     return 0;
 }
