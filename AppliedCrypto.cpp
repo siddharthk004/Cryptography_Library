@@ -57,7 +57,7 @@ int main()
     cout<<"\nDEC - "<<ans3;
 
     // Diffie Hellman
-    DiffieHellman dh(15); // p = 15
+    DiffieHellman dh(13); 
     cout<<"\n\n --- Diffie Hellman ---";
     dh.generateValues();
     dh.computePublicKeys();
