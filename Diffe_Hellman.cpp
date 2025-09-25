@@ -1,40 +1,35 @@
 #include "Diffe_Hellman.hpp"
+#include <NTL/ZZ.h>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 
-DiffieHellman::DiffieHellman(int prime)
+using namespace std;
+using namespace NTL;
+
+DiffieHellman::DiffieHellman(long prime)
 {
-    p = prime;
-    g = 0;
-    a = 0;
-    b = 0;
-    A = 0;
-    B = 0;
-    sharedAlice = 0;
-    sharedBob = 0;
+    p = conv<ZZ>(prime);
+    g = ZZ(0);
+    a = ZZ(0);
+    b = ZZ(0);
+    A = ZZ(0);
+    B = ZZ(0);
+    sharedAlice = ZZ(0);
+    sharedBob = ZZ(0);
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 }
 
-int DiffieHellman::modExp(int base, int exp, int mod)
+ZZ DiffieHellman::modExp(const ZZ &base, const ZZ &exp, const ZZ &mod)
 {
-    int result = 1;
-    base = base % mod;
-    while (exp > 0)
-    {
-        if (exp & 1)
-            result = (result * base) % mod;
-        exp >>= 1;
-        base = (base * base) % mod;
-    }
-    return result;
+    return PowerMod(base, exp, mod);
 }
 
 void DiffieHellman::generateValues()
 {
-    g = 1 + (std::rand() % (p - 1));
-    a = 1 + (std::rand() % (p - 1));
-    b = 1 + (std::rand() % (p - 1));
+    g = conv<ZZ>(1 + (std::rand() % (conv<long>(p) - 1)));
+    a = conv<ZZ>(1 + (std::rand() % (conv<long>(p) - 1)));
+    b = conv<ZZ>(1 + (std::rand() % (conv<long>(p) - 1)));
 }
 
 void DiffieHellman::computePublicKeys()
@@ -49,18 +44,18 @@ void DiffieHellman::computeSharedKeys()
     sharedBob = modExp(A, b, p);
 }
 
-void DiffieHellman::display() 
+void DiffieHellman::display() const
 {
-    std::cout << "p (prime modulus) = " << p << "\n";
-    std::cout << "g (generator)     = " << g << "\n";
-    std::cout << "Alice private a   = " << a << "\n";
-    std::cout << "Bob private b     = " << b << "\n";
-    std::cout << "Alice public A    = g^a mod p = " << A << "\n";
-    std::cout << "Bob public B      = g^b mod p = " << B << "\n";
-    std::cout << "Alice shared key  = B^a mod p = " << sharedAlice << "\n";
-    std::cout << "Bob shared key    = A^b mod p = " << sharedBob << "\n";
+    cout << "p (prime modulus) = " << p << "\n";
+    cout << "g (generator)     = " << g << "\n";
+    cout << "Alice private a   = " << a << "\n";
+    cout << "Bob private b     = " << b << "\n";
+    cout << "Alice public A    = g^a mod p = " << A << "\n";
+    cout << "Bob public B      = g^b mod p = " << B << "\n";
+    cout << "Alice shared key  = B^a mod p = " << sharedAlice << "\n";
+    cout << "Bob shared key    = A^b mod p = " << sharedBob << "\n";
     if (sharedAlice == sharedBob)
-        std::cout << "Shared secrets match!\n";
+        cout << "Shared secrets match!\n";
     else
-        std::cout << "Shared secrets differ!\n";
+        cout << "Shared secrets differ!\n";
 }

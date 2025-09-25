@@ -1,29 +1,26 @@
-#ifndef DIFFIEHELLMAN_HPP
-#define DIFFIEHELLMAN_HPP
+#ifndef DIFFE_HELLMAN_HPP
+#define DIFFE_HELLMAN_HPP
+
+#include <NTL/ZZ.h>
 
 class DiffieHellman
 {
 private:
-    int p;  
-    int g;  
-    int a;  
-    int b;  
+    NTL::ZZ p;
+    NTL::ZZ g;
+    NTL::ZZ a, b;
+    NTL::ZZ A, B;
+    NTL::ZZ sharedAlice, sharedBob;
 
-    int A;  
-    int B;  
-
-    int sharedAlice;
-    int sharedBob;
-
-    int modExp(int base, int exp, int mod);
+    NTL::ZZ modExp(const NTL::ZZ &base, const NTL::ZZ &exp, const NTL::ZZ &mod);
 
 public:
-    DiffieHellman(int prime);
+    DiffieHellman(long prime);
 
-    void generateValues();     
-    void computePublicKeys();  
-    void computeSharedKeys();  
-    void display();      
+    void generateValues();
+    void computePublicKeys();
+    void computeSharedKeys();
+    void display() const;
 };
 
-#endif 
+#endif
