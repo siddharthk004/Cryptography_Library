@@ -94,6 +94,3 @@ int main()
 
     return 0;
 }
-
-// g++ AppliedCrypto.cpp Hill_Cipher.cpp Shift_Cipher.cpp Vigenere_Cipher.cpp OneTimePad.cpp -o Myexe -lntl -lgmp -lm -mconsole
-// ./Myexe
