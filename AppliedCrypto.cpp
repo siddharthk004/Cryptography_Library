@@ -86,6 +86,7 @@ int main()
     cout << "Original msg = " << msg << ", decrypted msg = " << decMsg << "\n\n";
 
     ZZ r, s;
+    
     ZZ mHash = conv<ZZ>(42);
     elg.signMessage(mHash, r, s);
     cout << "Signature: r = " << r << ", s = " << s << "\n";
