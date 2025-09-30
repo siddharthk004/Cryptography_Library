@@ -68,7 +68,6 @@ int main()
     dh.computeSharedKeys();
     dh.display();
 
-
     // El Gamal
     cout << "\n\n --- El Gamal ---\n";
     ElGamal elg(29);
@@ -79,6 +78,7 @@ int main()
     elg.encrypt(m, c1, c2);
     ZZ dec = elg.decrypt(c1, c2);
     cout << "Original m = " << m << ", decrypted = " << dec << "\n\n";
+
 
     vector<ZZ> c1s, c2s;
     string msg = "Hi";
