@@ -79,7 +79,6 @@ int main()
     ZZ dec = elg.decrypt(c1, c2);
     cout << "Original m = " << m << ", decrypted = " << dec << "\n\n";
 
-
     vector<ZZ> c1s, c2s;
     string msg = "Hi";
     elg.encryptString(msg, c1s, c2s);
