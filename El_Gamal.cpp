@@ -80,10 +80,12 @@ string ElGamal::decryptString(const vector<ZZ> &c1s,
     for (size_t i = 0; i < c1s.size(); ++i)
     {
         ZZ m = decrypt(c1s[i], c2s[i]);
-        res.push_back(static_cast<char>(conv<long>(m)));
+        long val = conv<long>(m) % 256; 
+        res.push_back(static_cast<char>(val));
     }
     return res;
 }
+
 
 void ElGamal::signMessage(const ZZ &m, ZZ &r, ZZ &s)
 {
