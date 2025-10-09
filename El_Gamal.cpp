@@ -73,8 +73,7 @@ void ElGamal::encryptString(const string &msg,
     }
 }
 
-string ElGamal::decryptString(const vector<ZZ> &c1s,
-                              const vector<ZZ> &c2s)
+string ElGamal::decryptString(const vector<ZZ> &c1s,const vector<ZZ> &c2s)
 {
     string res;
     for (size_t i = 0; i < c1s.size(); ++i)
@@ -102,7 +101,6 @@ void ElGamal::signMessage(const ZZ &m, ZZ &r, ZZ &s)
     s = (kInv * (m - x * r)) % p1;
     if (s < 0)
         s += p1;
-
     }
 
 bool ElGamal::verifyMessage(const ZZ &m, const ZZ &r, const ZZ &s)
