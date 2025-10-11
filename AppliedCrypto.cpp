@@ -92,5 +92,26 @@ int main()
     bool ok = elg.verifyMessage(mHash, r, s);
     cout << "Verify: " << (ok ? "valid" : "invalid") << "\n";
 
+    // Eliptic Curve
+    
+    
+    // point addition
+    // point doubling
+
+    // to cheak point is valid or not
+
+    // scalar multiplication
+    // brute force
+    // doubling and over addition
+
+    // El gamal over Eliptic Curve
+    // Key Gen
+    // Encryption
+    // Digital Signature Create
+    // Decryption
+    // Digital Signature Verified
+
+    // Eliptic Curve over integrated + point Compression
+
     return 0;
 }
