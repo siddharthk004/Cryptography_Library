@@ -5,13 +5,16 @@
 #include "OneTimePad.hpp"
 #include "Diffe_Hellman.hpp"
 #include <NTL/ZZ.h>
+#include <NTL/ZZ_p.h>
 #include "El_Gamal.hpp"
+#include "Eliptic_Curve.hpp"
 
 using namespace std;
 using namespace NTL;
 
 int main()
 {
+
     cout << "hello World";
     string ans = "siddharth";
     string ans2 = "hrferdfhgfde";
@@ -19,8 +22,8 @@ int main()
     cout << "\n"
          << ans;
 
+    cout << "\n\n------------------------- Shift Cipher --------------------------------\n";
     // Shift Cipher
-    cout << "\n\n --- Shift Cipher --- ";
     Shift_Cipher sc;
     char AD = char(69);
     string a = "";
@@ -31,8 +34,8 @@ int main()
     ans = sc.Decryption(ans3, a);
     cout << "\nDEC - " << ans;
 
+    cout << "\n\n------------------------- Vigenere Cipher --------------------------------\n";
     // Vigenere Cipher
-    cout << "\n\n --- Vigenere Cipher --- ";
     Vigenere_Cipher v;
     cout << "\nORG - " << ans;
     ans3 = v.Encryption(ans, ans2);
@@ -40,8 +43,8 @@ int main()
     ans3 = v.Decryption(ans3, ans2);
     cout << "\nDEC - " << ans3;
 
+    cout << "\n\n------------------------- Hill Cipher --------------------------------\n";
     // Hill Cipher
-    cout << "\n\n --- Hill Cipher ---";
     HillCipher hc;
     hc.GenerateRandomKey();
     cout << "\nORG - " << ans;
@@ -50,8 +53,8 @@ int main()
     ans3 = hc.Decryption(ans3);
     cout << "\nDEC - " << ans3;
 
+    cout << "\n\n------------------------- One Time Pad --------------------------------\n";
     // One Time Pad
-    cout << "\n\n --- One Time Pad ---";
     OneTimePad otp;
     string key = otp.generateKey(ans.size());
     cout << "\nORG - " << ans;
@@ -60,16 +63,16 @@ int main()
     ans3 = otp.decrypt(ans3);
     cout << "\nDEC - " << ans3;
 
+    cout << "\n\n------------------------- Diffie Hellman --------------------------------\n";
     // Diffie Hellman
     DiffieHellman dh(13);
-    cout << "\n\n --- Diffie Hellman ---";
     dh.generateValues();
     dh.computePublicKeys();
     dh.computeSharedKeys();
     dh.display();
 
+    cout << "\n\n------------------------- EL Gamal --------------------------------\n";
     // El Gamal
-    cout << "\n\n --- El Gamal ---\n";
     ElGamal elg(257);
     elg.generateKeys();
     elg.displayKeys();
@@ -91,10 +94,45 @@ int main()
     cout << "Signature: r = " << r << ", s = " << s << "\n";
     bool ok = elg.verifyMessage(mHash, r, s);
     cout << "Verify: " << (ok ? "valid" : "invalid") << "\n";
+    cout << "\n\n------------------------- Elliptic Curve over GF(p) -------------------------\n";
 
+    ZZ p = conv<ZZ>(97); // prime modulus
+    ZZ aEC = conv<ZZ>(2);
+    ZZ bEC = conv<ZZ>(3);
+
+    // Create elliptic curve and initialize ZZ_p field
+    ELCurve curve(p, aEC, bEC);
+
+    // Define points using ZZ_p type
+    ZZ_p Px = to_ZZ_p(3);
+    ZZ_p Py = to_ZZ_p(6);
+    ZZ_p Qx = to_ZZ_p(80);
+    ZZ_p Qy = to_ZZ_p(10);
+
+    ECPoint P(Px, Py);
+    ECPoint Q(Qx, Qy);
+
+    cout << "Checking points validity:\n";
+    cout << "P is " << (curve.isValidPoint(P) ? "valid" : "invalid") << endl;
+    cout << "Q is " << (curve.isValidPoint(Q) ? "valid" : "invalid") << endl;
+
+    // P + Q
+    ECPoint R = curve.pointAdd(P, Q);
+    cout << "\nR = P + Q" << endl;
+    if (R.infinity)
+        cout << "R is point at infinity\n";
+    else
+        cout << "R = (" << rep(R.x) << ", " << rep(R.y) << ")\n";
+
+    // 2P
+    ECPoint D = curve.pointDouble(P);
+    cout << "\nD = 2P" << endl;
+    if (D.infinity)
+        cout << "D is point at infinity\n";
+    else
+        cout << "D = (" << rep(D.x) << ", " << rep(D.y) << ")\n";
     // Eliptic Curve
-    
-    
+
     // point addition
     // point doubling
 
