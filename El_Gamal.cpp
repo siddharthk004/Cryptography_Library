@@ -35,7 +35,7 @@ void ElGamal::generateKeys()
 
 void ElGamal::displayKeys() const
 {
-    cout << "Public key: p = " << p << ", g = " << g << ", h = " << h << "\n";
+    cout << "\nPublic key: p = " << p << ", g = " << g << ", h = " << h << "\n";
     cout << "Private key x = " << x << "\n";
 }
 

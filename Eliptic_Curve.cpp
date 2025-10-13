@@ -8,7 +8,7 @@ ECPoint ELCurve::pointAdd(const ECPoint &P, const ECPoint &Q) const
         return P;
 
     if (P.x == Q.x && P.y == -Q.y)
-        return ECPoint(); // point at infinity
+        return ECPoint();
 
     ZZ_p lambda;
     if (P.x != Q.x)
@@ -36,4 +36,23 @@ ECPoint ELCurve::pointDouble(const ECPoint &P) const
     ZZ_p y3 = lambda * (P.x - x3) - P.y;
 
     return ECPoint(x3, y3);
+}
+
+ECPoint ELCurve::scalarMultiply(const ECPoint &P, const ZZ &k) const
+{
+    ECPoint R;
+    ECPoint Q = P;
+    ZZ n = k;
+
+    while (n > 0)
+    {
+        if (bit(n, 0))
+        {
+            R = pointAdd(R, Q);
+        }
+        Q = pointDouble(Q);
+        n >>= 1;
+    }
+
+    return R;
 }

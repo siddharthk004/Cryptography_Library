@@ -7,7 +7,7 @@ using namespace NTL;
 using namespace std;
 
 // -------------------------
-// ECPoint definition first!
+// ECPoint definition first
 // -------------------------
 struct ECPoint
 {
@@ -31,7 +31,7 @@ private:
 public:
     ELCurve(const ZZ &prime, const ZZ &A, const ZZ &B)
     {
-        ZZ_p::init(prime); // initialize modulus
+        ZZ_p::init(prime);
         a = to_ZZ_p(A);
         b = to_ZZ_p(B);
     }
@@ -45,6 +45,7 @@ public:
 
     ECPoint pointAdd(const ECPoint &P, const ECPoint &Q) const;
     ECPoint pointDouble(const ECPoint &P) const;
+    ECPoint scalarMultiply(const ECPoint &P, const ZZ &k) const;
 };
 
 #endif

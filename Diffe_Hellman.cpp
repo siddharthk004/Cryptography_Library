@@ -46,7 +46,7 @@ void DiffieHellman::computeSharedKeys()
 
 void DiffieHellman::display() const
 {
-    cout << "p (prime modulus) = " << p << "\n";
+    cout << "\np (prime modulus) = " << p << "\n";
     cout << "g (generator)     = " << g << "\n";
     cout << "Alice private a   = " << a << "\n";
     cout << "Bob private b     = " << b << "\n";

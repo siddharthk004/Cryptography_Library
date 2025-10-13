@@ -94,7 +94,8 @@ int main()
     cout << "Signature: r = " << r << ", s = " << s << "\n";
     bool ok = elg.verifyMessage(mHash, r, s);
     cout << "Verify: " << (ok ? "valid" : "invalid") << "\n";
-    cout << "\n\n------------------------- Elliptic Curve over GF(p) -------------------------\n";
+
+    cout << "\n\n------------------------- Elliptic Curve -------------------------\n";
 
     ZZ p = conv<ZZ>(97); // prime modulus
     ZZ aEC = conv<ZZ>(2);
@@ -112,11 +113,12 @@ int main()
     ECPoint P(Px, Py);
     ECPoint Q(Qx, Qy);
 
-    cout << "Checking points validity:\n";
+    // Point At Curve or Not [ Validation ]
+    cout << "\nChecking points validity:\n";
     cout << "P is " << (curve.isValidPoint(P) ? "valid" : "invalid") << endl;
     cout << "Q is " << (curve.isValidPoint(Q) ? "valid" : "invalid") << endl;
 
-    // P + Q
+    // P + Q  Point Addition
     ECPoint R = curve.pointAdd(P, Q);
     cout << "\nR = P + Q" << endl;
     if (R.infinity)
@@ -124,32 +126,26 @@ int main()
     else
         cout << "R = (" << rep(R.x) << ", " << rep(R.y) << ")\n";
 
-    // 2P
+    // 2P Point Doubling
     ECPoint D = curve.pointDouble(P);
     cout << "\nD = 2P" << endl;
     if (D.infinity)
         cout << "D is point at infinity\n";
     else
         cout << "D = (" << rep(D.x) << ", " << rep(D.y) << ")\n";
-    // Eliptic Curve
-
-    // point addition
-    // point doubling
-
-    // to cheak point is valid or not
 
     // scalar multiplication
-    // brute force
-    // doubling and over addition
+    ECPoint SR = curve.scalarMultiply(P, bEC);
+    cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
 
     // El gamal over Eliptic Curve
-    // Key Gen
-    // Encryption
-    // Digital Signature Create
-    // Decryption
-    // Digital Signature Verified
+    // Key Gen 
+    // Encryption 
+    // Digital Signature Create 
+    // Decryption 
+    // Digital Signature Verified 
 
-    // Eliptic Curve over integrated + point Compression
+    // Eliptic Curve over integrated + point Compression 
 
     return 0;
 }
