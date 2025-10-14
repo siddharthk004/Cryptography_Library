@@ -1,13 +1,13 @@
 #include <iostream>
-#include "Vigenere_Cipher.hpp"
-#include "Hill_Cipher.hpp"
-#include "Shift_Cipher.hpp"
-#include "OneTimePad.hpp"
-#include "Diffe_Hellman.hpp"
+#include "Vigenere-Cipher/Vigenere_Cipher.hpp"
+#include "Hill-Cipher/Hill_Cipher.hpp"
+#include "Shift/Shift_Cipher.hpp"
+#include "OTP/OneTimePad.hpp"
+#include "Diffie-Hellman/Diffe_Hellman.hpp"
 #include <NTL/ZZ.h>
 #include <NTL/ZZ_p.h>
-#include "El_Gamal.hpp"
-#include "Eliptic_Curve.hpp"
+#include "El-Gamal/El_Gamal.hpp"
+#include "Eliptic-Curve/Eliptic_Curve.hpp"
 
 using namespace std;
 using namespace NTL;
@@ -139,13 +139,13 @@ int main()
     cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
 
     // El gamal over Eliptic Curve
-    // Key Gen 
-    // Encryption 
-    // Digital Signature Create 
-    // Decryption 
-    // Digital Signature Verified 
+    // Key Gen
+    // Encryption
+    // Digital Signature Create
+    // Decryption
+    // Digital Signature Verified
 
-    // Eliptic Curve over integrated + point Compression 
+    // Eliptic Curve over integrated + point Compression
 
     return 0;
 }
