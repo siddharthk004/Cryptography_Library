@@ -11,7 +11,6 @@
 
 using namespace std;
 using namespace NTL;
-
 int main()
 {
 
