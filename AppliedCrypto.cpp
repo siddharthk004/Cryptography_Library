@@ -13,7 +13,6 @@ using namespace std;
 using namespace NTL;
 int main()
 {
-
     cout << "hello World";
     string ans = "siddharth";
     string ans2 = "hrferdfhgfde";
