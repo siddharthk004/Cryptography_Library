@@ -9,6 +9,7 @@
 #include "El-Gamal/El_Gamal.hpp"
 #include "Eliptic-Curve/Eliptic_Curve.hpp"
 
+
 using namespace std;
 using namespace NTL;
 int main()
