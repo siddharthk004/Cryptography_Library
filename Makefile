@@ -1,3 +1,4 @@
+
 CXX = g++
 CXXFLAGS = -Wall -O2
 LIBS = -lntl -lgmp -lm -mconsole
