@@ -1,104 +1,49 @@
-#ifndef ELIPTIC_CURVE_HPP
-#define ELIPTIC_CURVE_HPP
+#ifndef E_C_HPP
+#define E_C_HPP
 
 #include <NTL/ZZ_p.h>
-#include <iostream>
+#include <string>
+#include <vector>
 using namespace NTL;
-using namespace std;
 
-// ECPoint definition first
 struct ECPoint
 {
-    ZZ_p x;
-    ZZ_p y;
+    ZZ_p x, y;
     bool infinity;
 
     ECPoint() : infinity(true) {}
     ECPoint(const ZZ_p &xVal, const ZZ_p &yVal) : x(xVal), y(yVal), infinity(false) {}
 };
 
-// Elliptic Curve class
 class ELCurve
 {
 private:
-    ZZ_p a;
-    ZZ_p b;
+    ZZ_p a, b; // Curve: y^2 = x^3 + a*x + b
+    int p,q,d;
+
 
 public:
-    ELCurve(const ZZ &prime, const ZZ &A, const ZZ &B)
-    {
-        ZZ_p::init(prime);
-        a = to_ZZ_p(A);
-        b = to_ZZ_p(B);
-    }
+    int n,e;
+    ELCurve(const ZZ_p &A, const ZZ_p &B) : a(A), b(B) {}
 
-    bool isValidPoint(const ECPoint &P) const
-    {
-        if (P.infinity)
-            return true;
-        return sqr(P.y) == power(P.x, 3) + a * P.x + b;
-    }
-
+    bool isValidPoint(const ECPoint &P) const;
     ECPoint pointAdd(const ECPoint &P, const ECPoint &Q) const;
     ECPoint pointDouble(const ECPoint &P) const;
     ECPoint scalarMultiply(const ECPoint &P, const ZZ &k) const;
-    
+
+    // --- ElGamal over EC ---
+    ECPoint generatePublicKey(const ECPoint &G, const ZZ &priv) const;
+    std::pair<ECPoint, ECPoint> encrypt(const ECPoint &M, const ECPoint &G, const ECPoint &pubKey, const ZZ &k) const;
+    ECPoint decrypt(const std::pair<ECPoint, ECPoint> &cipher, const ZZ &priv) const;
+
+    // --- Digital Signature ---
+    std::pair<ZZ, ZZ> sign(const ZZ &msgHash, const ZZ &priv, const ECPoint &G, const ZZ &n) const;
+    bool verify(const ZZ &msgHash, const std::pair<ZZ, ZZ> &sig, const ECPoint &G, const ECPoint &pubKey, const ZZ &n) const;
+
+    // Eliptic Curve Over Integrated + Point Compression 
+    void KeyGen(int p,int q) const;
+    int Encrypt(int m) const;
+    bool Decrypt(int c) const;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // pair<ECPoint, ZZ> EC_ElGamal_KeyGen(const ELCurve &curve, const ECPoint &G);
-    // pair<ECPoint, ECPoint> EC_ElGamal_Encrypt(const ELCurve &curve, const ECPoint &G, const ECPoint &Q, const ECPoint &M, const ZZ &k);
-    // ECPoint EC_ElGamal_Decrypt(const ELCurve &curve, const ZZ &d, const std::pair<ECPoint, ECPoint> &cipher);
-    // std::pair<ZZ, ZZ> EC_ElGamal_Sign(const ELCurve &curve, const ECPoint &G, const ZZ &d, const ZZ &h, const ZZ &k);
-    // bool EC_ElGamal_Verify(const ELCurve &curve, const ECPoint &G, const ECPoint &Q, const std::pair<ZZ, ZZ> &sig, const ZZ &h);
