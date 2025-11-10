@@ -8,6 +8,8 @@
 #include <NTL/ZZ_p.h>
 #include "El-Gamal/El_Gamal.hpp"
 #include "Eliptic-Curve/Eliptic_Curve.hpp"
+#include "Int_Fact/RSA.hpp"
+// #include "Int_Fact/Factor.hpp"
 
 using namespace std;
 using namespace NTL;
@@ -137,46 +139,95 @@ int main()
     // ECPoint SR = curve.scalarMultiply(P, bEC);
     // cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
 
-    cout << "\n---------------- ElGamal over Elliptic Curve ----------------\n";
+    // cout << "\n---------------- ElGamal over Elliptic Curve ----------------\n";
 
-    ZZ p = conv<ZZ>(97);
-    ZZ_p::init(p);
+    // ZZ p = conv<ZZ>(97);
+    // ZZ_p::init(p);
 
-    ZZ_p a = conv<ZZ_p>(2);
-    ZZ_p b = conv<ZZ_p>(3);
+    // ZZ_p a = conv<ZZ_p>(2);
+    // ZZ_p b = conv<ZZ_p>(3);
 
-    ELCurve curve(a, b);
-    ECPoint G(conv<ZZ_p>(2), conv<ZZ_p>(7));
-    ZZ n = conv<ZZ>(5);
+    // ELCurve curve(a, b);
+    // ECPoint G(conv<ZZ_p>(2), conv<ZZ_p>(7));
+    // ZZ n = conv<ZZ>(5);
 
-    // --- Key Generation ---
-    ZZ priv = conv<ZZ>(2);
+    // // --- Key Generation ---
+    // ZZ priv = conv<ZZ>(2);
+    // ECPoint pub = curve.generatePublicKey(G, priv);
+
+    // cout << "Private key: " << priv << "\n";
+    // cout << "Public key: (" << pub.x << ", " << pub.y << ")\n";
+
+    // // --- Encryption ---
+    // ECPoint M(conv<ZZ_p>(3), conv<ZZ_p>(6));
+    // ZZ k = conv<ZZ>(4);
+    // auto cipher = curve.encrypt(M, G, pub, k);
+
+    // cout << "\nCiphertext:\nC1 = (" << cipher.first.x << ", " << cipher.first.y << ")\n";
+    // cout << "C2 = (" << cipher.second.x << ", " << cipher.second.y << ")\n";
+
+    // // --- Decryption ---
+    // ECPoint dec = curve.decrypt(cipher, priv);
+    // cout << "\nDecrypted Message: (" << dec.x << ", " << dec.y << ")\n";
+ 
+    // // --- Digital Signature ---
+    // ZZ msgHash = conv<ZZ>(25);
+    // auto sig = curve.sign(msgHash, priv, G, n);
+    // cout << "\nSignature: (r=" << sig.first << ", s=" << sig.second << ")\n";
+
+    // bool valid = curve.verify(msgHash, sig, G, pub, n);
+    // cout << "Signature verification: " << (valid ? "VALID" : "INVALID") << endl;
+
+    cout << "\n---------------- Eliptic Curve over integrated + point Compression ----------------\n";
+    
+    ZZ prime = conv<ZZ>(97);
+    ZZ_p::init(prime);
+
+    ELCurve curve(to_ZZ_p(2), to_ZZ_p(3)); 
+    ECPoint G(to_ZZ_p(3), to_ZZ_p(7));
+
+    ZZ priv = conv<ZZ>(5);
     ECPoint pub = curve.generatePublicKey(G, priv);
 
-    cout << "Private key: " << priv << "\n";
-    cout << "Public key: (" << pub.x << ", " << pub.y << ")\n";
+    cout << "Public Key: (" << pub.x << ", " << pub.y << ")\n";
 
-    // --- Encryption ---
-    ECPoint M(conv<ZZ_p>(3), conv<ZZ_p>(6));
-    ZZ k = conv<ZZ>(4);
-    auto cipher = curve.encrypt(M, G, pub, k);
+    CompressedPoint cp = curve.compressPoint(pub);
+    cout << "Compressed form -> x: " << cp.x << ", y is odd: " << cp.y_is_odd << "\n";
 
-    cout << "\nCiphertext:\nC1 = (" << cipher.first.x << ", " << cipher.first.y << ")\n";
-    cout << "C2 = (" << cipher.second.x << ", " << cipher.second.y << ")\n";
+    ECPoint decompressed = curve.decompressPoint(cp);
+    cout << "Decompressed -> (" << decompressed.x << ", " << decompressed.y << ")\n";
 
-    // --- Decryption ---
-    ECPoint dec = curve.decrypt(cipher, priv);
-    cout << "\nDecrypted Message: (" << dec.x << ", " << dec.y << ")\n";
- 
-    // --- Digital Signature ---
-    ZZ msgHash = conv<ZZ>(25);
-    auto sig = curve.sign(msgHash, priv, G, n);
-    cout << "\nSignature: (r=" << sig.first << ", s=" << sig.second << ")\n";
+    if (curve.isValidPoint(decompressed))
+        cout << "Point is valid on the curve \n";
+    else
+        cout << "Invalid point \n";
 
-    bool valid = curve.verify(msgHash, sig, G, pub, n);
-    cout << "Signature verification: " << (valid ? "VALID" : "INVALID") << endl;
 
-    // Eliptic Curve over integrated + point Compression
+    cout << "\n---------------- Integer Factorization ----------------\n";
+
+    unsigned int bitsPerPrime = 32; 
+    cout << "Generating RSA keys ...\n";
+    RSAKeyPair key = RSA_GenerateKeys(bitsPerPrime);
+
+    cout << "n = " << key.n << "\n";
+    cout << "e = " << key.e << "\n";
+    cout << "d = " << key.d << "\n";
+    cout << "p = " << key.p << "\n";
+    cout << "q = " << key.q << "\n";
+
+    ZZ m = conv<ZZ>(12345);
+    cout << "Plain: " << m << "\n";
+
+    ZZ c = RSA_Encrypt(m, key);
+    cout << "Cipher: " << c << "\n";
+
+    ZZ mrec = RSA_Decrypt(c, key);
+    cout << "Decrypted: " << mrec << "\n";
+
+    ZZ hashv = conv<ZZ>(987654321);
+    ZZ sig = RSA_Sign(hashv, key);
+    cout << "Signature: " << sig << "\n";
+    cout << "Verify: " << (RSA_Verify(hashv, sig, key) ? "OK" : "FAIL") << "\n";
 
     return 0;
 }

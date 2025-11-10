@@ -1,18 +1,17 @@
 #include "Eliptic_Curve.hpp"
 #include <NTL/ZZ_p.h>
+#include <NTL/ZZ.h>
 #include <iostream>
 using namespace std;
 using namespace NTL;
 
-bool ELCurve::isValidPoint(const ECPoint &P) const
-{
+bool ELCurve::isValidPoint(const ECPoint &P) const {
     if (P.infinity)
         return true;
     return sqr(P.y) == power(P.x, 3) + a * P.x + b;
 }
 
-ECPoint ELCurve::pointAdd(const ECPoint &P, const ECPoint &Q) const
-{
+ECPoint ELCurve::pointAdd(const ECPoint &P, const ECPoint &Q) const {
     if (P.infinity)
         return Q;
     if (Q.infinity)
@@ -31,8 +30,7 @@ ECPoint ELCurve::pointAdd(const ECPoint &P, const ECPoint &Q) const
     return ECPoint(x3, y3);
 }
 
-ECPoint ELCurve::pointDouble(const ECPoint &P) const
-{
+ECPoint ELCurve::pointDouble(const ECPoint &P) const {
     if (P.infinity)
         return P;
 
@@ -42,14 +40,12 @@ ECPoint ELCurve::pointDouble(const ECPoint &P) const
     return ECPoint(x3, y3);
 }
 
-ECPoint ELCurve::scalarMultiply(const ECPoint &P, const ZZ &k) const
-{
+ECPoint ELCurve::scalarMultiply(const ECPoint &P, const ZZ &k) const {
     ECPoint R;
     ECPoint Q = P;
     ZZ n = k;
 
-    while (n > 0)
-    {
+    while (n > 0) {
         if (bit(n, 0))
             R = pointAdd(R, Q);
         Q = pointDouble(Q);
@@ -58,23 +54,18 @@ ECPoint ELCurve::scalarMultiply(const ECPoint &P, const ZZ &k) const
     return R;
 }
 
-// ------------------ ElGamal Encryption System ------------------
-
-ECPoint ELCurve::generatePublicKey(const ECPoint &G, const ZZ &priv) const
-{
+ECPoint ELCurve::generatePublicKey(const ECPoint &G, const ZZ &priv) const {
     return scalarMultiply(G, priv);
 }
 
-std::pair<ECPoint, ECPoint> ELCurve::encrypt(const ECPoint &M, const ECPoint &G, const ECPoint &pubKey, const ZZ &k) const
-{
+pair<ECPoint, ECPoint> ELCurve::encrypt(const ECPoint &M, const ECPoint &G, const ECPoint &pubKey, const ZZ &k) const {
     ECPoint C1 = scalarMultiply(G, k);
     ECPoint kPB = scalarMultiply(pubKey, k);
     ECPoint C2 = pointAdd(M, kPB);
     return {C1, C2};
 }
 
-ECPoint ELCurve::decrypt(const std::pair<ECPoint, ECPoint> &cipher, const ZZ &priv) const
-{
+ECPoint ELCurve::decrypt(const pair<ECPoint, ECPoint> &cipher, const ZZ &priv) const {
     ECPoint C1 = cipher.first;
     ECPoint C2 = cipher.second;
     ECPoint dC1 = scalarMultiply(C1, priv);
@@ -82,13 +73,9 @@ ECPoint ELCurve::decrypt(const std::pair<ECPoint, ECPoint> &cipher, const ZZ &pr
     return pointAdd(C2, neg_dC1);
 }
 
-// ------------------ Digital Signature ------------------
-
-std::pair<ZZ, ZZ> ELCurve::sign(const ZZ &msgHash, const ZZ &priv, const ECPoint &G, const ZZ &n) const
-{
+pair<ZZ, ZZ> ELCurve::sign(const ZZ &msgHash, const ZZ &priv, const ECPoint &G, const ZZ &n) const {
     ZZ k, r, s;
-    do
-    {
+    do {
         RandomBnd(k, n - 1);
         ECPoint R = scalarMultiply(G, k);
         r = rep(R.x) % n;
@@ -99,8 +86,7 @@ std::pair<ZZ, ZZ> ELCurve::sign(const ZZ &msgHash, const ZZ &priv, const ECPoint
     return {r, s};
 }
 
-bool ELCurve::verify(const ZZ &msgHash, const std::pair<ZZ, ZZ> &sig, const ECPoint &G, const ECPoint &pubKey, const ZZ &n) const
-{
+bool ELCurve::verify(const ZZ &msgHash, const pair<ZZ, ZZ> &sig, const ECPoint &G, const ECPoint &pubKey, const ZZ &n) const {
     ZZ r = sig.first, s = sig.second;
     if (r <= 0 || r >= n || s <= 0 || s >= n)
         return false;
@@ -117,16 +103,62 @@ bool ELCurve::verify(const ZZ &msgHash, const std::pair<ZZ, ZZ> &sig, const ECPo
     return v == r;
 }
 
-void ELCurve::KeyGen(int p,int q) const
-{
-    this->n = p*q;
-    int value = (p-1)*(q-1);
-    this->e = 5;
-    this->d = InvMod(e, value);
+void ELCurve::KeyGen(int p, int q) const {
+    ZZ n = conv<ZZ>(p) * conv<ZZ>(q);
+    ZZ phi = conv<ZZ>((p - 1) * (q - 1));
+    ZZ e = conv<ZZ>(5);
+    ZZ d = InvMod(e, phi);
 }
 
-int ELCurve::Encrypt(int m) const
-{}
 
-bool ELCurve::Decrypt(int c) const
-{}
+int ELCurve::Encrypt(int m) const {
+    cout << "(RSA-like Encrypt not implemented yet)\n";
+    return m;
+}
+
+bool ELCurve::Decrypt(int c) const {
+    cout << "(RSA-like Decrypt not implemented yet)\n";
+    return true;
+}
+
+static bool mod_sqrt(ZZ &root, const ZZ &a, const ZZ &p) {
+    if (IsZero(a)) { root = ZZ(0); return true; }
+    if (Jacobi(a, p) != 1) return false;
+    if (p % 4 == 3) {
+        root = PowerMod(a, (p + 1) / 4, p);
+        return true;
+    }
+    try {
+        root = SqrRootMod(a, p);
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
+
+CompressedPoint ELCurve::compressPoint(const ECPoint &P) const {
+    if (P.infinity) return CompressedPoint();
+    ZZ xZZ = rep(P.x);
+    ZZ yZZ = rep(P.y);
+    bool odd = IsOdd(yZZ);
+    return CompressedPoint(xZZ, odd);
+}
+
+ECPoint ELCurve::decompressPoint(const CompressedPoint &cp) const {
+    if (cp.infinity) return ECPoint();
+    ZZ p = ZZ_p::modulus();
+    ZZ xZZ = cp.x % p; if (xZZ < 0) xZZ += p;
+    ZZ_p x = to_ZZ_p(xZZ);
+
+    ZZ_p rhs = power(x, 3) + a * x + b;
+    ZZ rhsZZ = rep(rhs) % p; if (rhsZZ < 0) rhsZZ += p;
+
+    ZZ yZZ;
+    if (!mod_sqrt(yZZ, rhsZZ, p)) return ECPoint();
+
+    if (IsOdd(yZZ) != cp.y_is_odd)
+        yZZ = (p - yZZ) % p;
+
+    ZZ_p y = to_ZZ_p(yZZ);
+    return ECPoint(x, y);
+}
