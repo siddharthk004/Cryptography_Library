@@ -202,7 +202,6 @@ int main()
     else
         cout << "Invalid point \n";
 
-
     cout << "\n---------------- Integer Factorization ----------------\n";
 
     unsigned int bitsPerPrime = 32; 
