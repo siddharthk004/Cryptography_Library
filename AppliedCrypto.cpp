@@ -197,10 +197,7 @@ int main()
     ECPoint decompressed = curve.decompressPoint(cp);
     cout << "Decompressed -> (" << decompressed.x << ", " << decompressed.y << ")\n";
 
-    if (curve.isValidPoint(decompressed))
-        cout << "Point is valid on the curve \n";
-    else
-        cout << "Invalid point \n";
+    cout << " " << (curve.isValidPoint(decompressed) ? "Point is valid on the curve \n" : "Invalid point \n") << "\n";
 
     cout << "\n---------------- Integer Factorization ----------------\n";
 
